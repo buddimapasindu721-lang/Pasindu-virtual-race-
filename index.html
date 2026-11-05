@@ -3,91 +3,192 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PASINDU VIRTUAL RACE</title>
 
 <script type="importmap">
 {
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
-  }
+ "imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+ }
 }
 </script>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:#07100d;color:white;
+ margin:0;background:#080e13;color:#fff;
  font-family:Arial,sans-serif;
 }
 header{
- background:linear-gradient(90deg,#111,#183c25);
- padding:17px;text-align:center;
- border-bottom:2px solid #e4b53c;
+ padding:16px 10px;text-align:center;
+ background:linear-gradient(110deg,#101923,#173c2b,#111923);
+ border-bottom:2px solid #d9ae43;
 }
-header h1{margin:0;color:#ffd34d;letter-spacing:2px}
-header p{margin:6px 0 0;color:#b6d5bd;font-size:12px}
-nav{
+header h1{
+ margin:0;color:#f5cf62;
+ letter-spacing:2px;font-size:25px;
+}
+header p{margin:6px 0 0;color:#a9c5b3;font-size:11px}
+.topstats{
+ display:flex;justify-content:center;
+ gap:12px;flex-wrap:wrap;padding:12px 8px;
+}
+.stat{
+ background:#14212a;border:1px solid #40515a;
+ padding:9px 15px;border-radius:8px;
+ text-align:center;min-width:95px;
+}
+.stat small{display:block;color:#9baeb6;font-size:10px}
+.stat strong{display:block;color:#f7d36c;margin-top:4px}
+.tabs{
  display:flex;justify-content:center;gap:8px;
- padding:12px;flex-wrap:wrap;
+ padding:5px 8px 12px;flex-wrap:wrap;
 }
 button{
- border:1px solid #c99b32;
- background:#17251c;color:white;
- padding:11px 16px;border-radius:8px;
+ background:#19262d;color:#fff;
+ border:1px solid #53646a;
+ border-radius:7px;padding:11px 15px;
  font-weight:bold;cursor:pointer;
 }
-button.active,button:hover{
- background:#c99b32;color:#101610;
+button:hover{background:#b78d35;color:#111}
+button:disabled{opacity:.45;cursor:default}
+button.active{background:#b78d35;color:#111}
+.main{
+ max-width:1250px;margin:auto;padding:8px;
 }
-#raceBox{
- width:100%;height:420px;position:relative;
- background:#101b13;overflow:hidden;
+.race-head{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;flex-wrap:wrap;
+ margin:5px 0 10px;
 }
-#race3d{width:100%;height:100%;display:block}
-#overlay{
- position:absolute;top:12px;left:12px;
- background:#000b;padding:12px;border-radius:8px;
- font-size:13px;line-height:1.8;
+.race-head h2{margin:0;color:#f1cd62;font-size:19px}
+.pill{
+ background:#263b31;border:1px solid #63866a;
+ border-radius:20px;padding:7px 12px;
+ font-size:11px;color:#c4e8cb;
 }
-#timer{
- font-size:29px;color:#ffd34d;font-weight:bold;
+.stage{
+ position:relative;background:#101a1c;
+ border:1px solid #536b55;border-radius:10px;
+ overflow:hidden;
 }
-#status{
- text-align:center;padding:14px;
- color:#f7d46b;font-weight:bold;
+#raceCanvas{
+ display:block;width:100%;height:390px;
 }
-.actions{text-align:center;padding:10px}
-#startBtn{
- background:linear-gradient(90deg,#e9b72e,#f47a18);
- color:#17120a;font-size:16px;padding:14px 30px;
+.overlay{
+ position:absolute;top:10px;left:10px;
+ background:#07100ee8;padding:10px 13px;
+ border:1px solid #b89742;border-radius:8px;
+ line-height:1.8;font-size:12px;
+ pointer-events:none;
 }
-#leaderboard{
- padding:12px;max-width:900px;margin:auto;
+.overlay b{color:#f3d16d}
+.timer{
+ position:absolute;top:10px;right:10px;
+ background:#07100eeb;border:1px solid #b89742;
+ border-radius:8px;padding:9px 14px;
+ text-align:center;
 }
-#leaderboard h2{color:#ffd34d}
-.entry{
- display:grid;grid-template-columns:42px 1fr auto;
- gap:10px;align-items:center;
- padding:11px;margin:6px 0;
- border:1px solid #344c3b;border-radius:8px;
- background:#14251a;font-size:13px;
+.timer small{display:block;color:#c2c7b7;font-size:10px}
+#clock{font-size:27px;color:#ffd65e;font-weight:bold}
+.race-status{
+ background:#13251b;color:#f4d66c;
+ padding:12px;text-align:center;
+ font-size:13px;font-weight:bold;
+ border-top:1px solid #3a573f;
 }
-.num{color:#ffd34d;font-size:18px;font-weight:bold}
-.odds{color:#9fdaa9}
-#results{
- display:none;text-align:center;
- margin:15px;padding:18px;
- background:linear-gradient(135deg,#173b24,#101b13);
- border:2px solid #d9ae3d;border-radius:12px;
+.screen-grid{
+ display:grid;grid-template-columns:1fr 300px;
+ gap:12px;margin-top:12px;
 }
-#results h2{color:#ffd34d}
-#results .winner{font-size:25px;color:#fff}
-footer{text-align:center;padding:20px;color:#83988a;font-size:11px}
-@media(max-width:600px){
- #raceBox{height:340px}
+.panel{
+ background:#111d22;border:1px solid #34484b;
+ border-radius:9px;overflow:hidden;
+}
+.panel-title{
+ padding:12px;background:#1a2a2d;
+ color:#f3d16d;font-weight:bold;
+ border-bottom:1px solid #3c4e4d;
+}
+.runners{padding:7px}
+.runner{
+ display:grid;
+ grid-template-columns:32px 1fr auto;
+ align-items:center;gap:8px;
+ padding:9px 6px;border-bottom:1px solid #293b3b;
+ font-size:12px;
+}
+.runner:last-child{border:0}
+.runner-no{
+ width:27px;height:27px;display:grid;
+ place-items:center;border-radius:5px;
+ background:#9a7733;color:white;font-weight:bold;
+}
+.runner-name{font-weight:bold}
+.runner-detail{font-size:10px;color:#a9c4b2;margin-top:4px}
+.runner-pay{text-align:right;color:#f5d16b;font-weight:bold}
+.runner-pay small{display:block;color:#9aada4;font-size:9px}
+.progress-wrap{padding:12px}
+.progress{
+ height:7px;background:#263936;border-radius:10px;
+ overflow:hidden;margin-top:7px;
+}
+#progressBar{
+ height:100%;width:0;background:#d7b24c;
+ transition:width .2s;
+}
+.actions{
+ display:flex;justify-content:center;
+ gap:9px;flex-wrap:wrap;margin:13px 0;
+}
+.gold{
+ background:linear-gradient(90deg,#d7a633,#f5d16c);
+ color:#111;border:0;
+}
+.result-section{margin-top:20px}
+.result-section h2{
+ color:#f5d16c;font-size:19px;
+ border-bottom:1px solid #465346;padding-bottom:9px;
+}
+.result-board{
+ border:1px solid #66532c;border-radius:9px;
+ background:linear-gradient(145deg,#182b25,#10191d);
+ overflow:hidden;
+}
+.result-top{
+ background:#24392c;padding:13px;
+ display:flex;justify-content:space-between;
+ gap:8px;flex-wrap:wrap;
+}
+.result-top b{color:#f4d06a}
+.result-table{
+ width:100%;border-collapse:collapse;
+ font-size:12px;
+}
+.result-table th{
+ background:#17251f;color:#d9bc6e;
+ text-align:left;padding:11px 8px;
+}
+.result-table td{
+ padding:10px 8px;border-top:1px solid #31433a;
+}
+.result-table tr:first-child td{color:#ffdb71;font-weight:bold}
+.result-table td:last-child{color:#b9dfbf}
+.history-list{padding:8px}
+.history-item{
+ display:flex;justify-content:space-between;
+ gap:8px;padding:10px;
+ background:#192820;border-radius:6px;
+ margin-bottom:6px;font-size:11px;
+}
+.history-item b{color:#f2ce66}
+.empty{color:#8da19a;text-align:center;padding:22px;font-size:12px}
+footer{text-align:center;color:#82938b;font-size:10px;padding:24px}
+@media(max-width:750px){
+ .screen-grid{grid-template-columns:1fr}
+ #raceCanvas{height:320px}
  header h1{font-size:20px}
- .entry{font-size:12px}
 }
 </style>
 </head>
@@ -95,357 +196,653 @@ footer{text-align:center;padding:20px;color:#83988a;font-size:11px}
 <body>
 <header>
  <h1>🏆 PASINDU VIRTUAL RACE</h1>
- <p>3D AUTOMATIC RACING EXPERIENCE</p>
+ <p>3D AUTOMATIC RACING • HORSE • DOG • HARNESS</p>
 </header>
 
-<nav>
- <button class="active" id="horseTab">🐎 HORSE</button>
- <button id="dogTab" onclick="alert('Dog Racing will be added in the next version.')">🐕 DOG</button>
- <button id="harnessTab" onclick="alert('Harness Racing will be added in the next version.')">🏇 HARNESS</button>
-</nav>
+<div class="topstats">
+ <div class="stat"><small>RACE NUMBER</small><strong id="topRace">01 / 24</strong></div>
+ <div class="stat"><small>RACE TYPE</small><strong id="topType">HORSE</strong></div>
+ <div class="stat"><small>RUNNERS</small><strong>08</strong></div>
+ <div class="stat"><small>MODE</small><strong>AUTO RACE</strong></div>
+</div>
 
-<div id="raceBox">
- <canvas id="race3d"></canvas>
- <div id="overlay">
-  <b>LIVE RACE</b><br>
-  RACE NO: <span id="raceNo">001</span><br>
-  RUNNERS: 24<br>
-  TIME: <span id="timer">01:00</span>
+<div class="tabs">
+ <button class="active" id="tabHorse">🐎 HORSE</button>
+ <button id="tabDog">🐕 DOG</button>
+ <button id="tabHarness">🏇 HARNESS</button>
+</div>
+
+<main class="main">
+ <div class="race-head">
+  <h2 id="raceTitle">HORSE RACING</h2>
+  <span class="pill" id="roundLabel">ROUND 01</span>
  </div>
-</div>
 
-<div id="status">READY FOR NEXT RACE</div>
+ <div class="stage">
+  <canvas id="raceCanvas"></canvas>
+  <div class="overlay">
+   <b>PASINDU RACING LIVE</b><br>
+   RACE: <span id="screenRace">01</span><br>
+   TYPE: <span id="screenType">HORSE</span><br>
+   RUNNERS: 8
+  </div>
+  <div class="timer">
+   <small id="timerLabel">STARTS IN</small>
+   <div id="clock">01:00</div>
+  </div>
+  <div class="race-status" id="raceStatus">
+   PREPARING NEXT RACE
+  </div>
+ </div>
 
-<div class="actions">
- <button id="startBtn">START RACE</button>
- <button id="resetBtn">NEW RACE</button>
-</div>
+ <div class="screen-grid">
+  <section class="panel">
+   <div class="panel-title">🏁 LIVE RACE PARTICIPANTS</div>
+   <div class="runners" id="runnerList"></div>
+   <div class="progress-wrap">
+    <div style="display:flex;justify-content:space-between;font-size:11px">
+     <span>RACE PROGRESS</span>
+     <b id="percent">0%</b>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+   </div>
+  </section>
 
-<div id="leaderboard">
- <h2>🏁 RACE PARTICIPANTS</h2>
- <div id="entries"></div>
-</div>
+  <section class="panel">
+   <div class="panel-title">🏆 LATEST RESULT</div>
+   <div id="latestResult" class="empty">
+    Waiting for first race result...
+   </div>
+  </section>
+ </div>
 
-<div id="results">
- <h2>🏆 RACE RESULTS</h2>
- <div class="winner" id="winnerName"></div>
- <p id="winnerOdds"></p>
- <p id="secondName"></p>
- <p id="thirdName"></p>
- <button id="againBtn">NEXT RACE</button>
-</div>
+ <div class="actions">
+  <button class="gold" id="pauseBtn">⏸ PAUSE</button>
+  <button id="skipBtn">⏭ NEXT RACE</button>
+ </div>
+
+ <section class="result-section">
+  <h2>🏆 OFFICIAL RESULT BOARD</h2>
+  <div class="result-board">
+   <div class="result-top">
+    <b id="resultHeading">WAITING FOR RESULT</b>
+    <span id="resultDate">PASINDU VIRTUAL RACE</span>
+   </div>
+   <div id="resultContent" class="empty">
+    Results will appear here after each race.
+   </div>
+  </div>
+ </section>
+
+ <section class="result-section">
+  <h2>📋 RACE HISTORY</h2>
+  <div class="panel history-list" id="history">
+   <div class="empty">No completed races yet.</div>
+  </div>
+ </section>
+</main>
 
 <footer>
- PASINDU VIRTUAL RACE • 3D DEMO SYSTEM
+ PASINDU VIRTUAL RACE • AUTOMATIC 24 RACE CYCLE<br>
+ Simulation only • Demo payouts are not real-money payments
 </footer>
 
 <script type="module">
 import * as THREE from "three";
 
-const canvas=document.getElementById("race3d");
+/* ---------------- CONFIG ---------------- */
+
+const TOTAL_RACES=24;
+const RUNNERS=8;
+const COUNTDOWN_SECONDS=60;
+const RACE_SECONDS=22;
+const RESULT_SECONDS=5;
+
+const TYPES=["HORSE","DOG","HARNESS"];
+
+const names={
+ HORSE:["THUNDER KING","GOLDEN STAR","BLACK ARROW","SILVER WIND","RED ROCKET","NIGHT RUNNER","ROYAL FLASH","BLUE COMET"],
+ DOG:["FAST PAWS","RAPID DASH","SILVER FOX","BOLD RUNNER","DARK FLASH","SPEEDY ACE","WILD TRACK","QUICK STAR"],
+ HARNESS:["IRON WHEEL","ROYAL SULKY","GOLDEN CART","FAST DRIVER","STORM CHASER","SILVER REIN","KING HARNESS","FINAL POWER"]
+};
+
+const colors=[
+ 0x8c451e,0xe5e5e5,0x252525,0x9c2424,
+ 0xc39a35,0x443c78,0x9c6a9a,0x287c9b
+];
+
+let raceNo=1;
+let phase="countdown";
+let seconds=COUNTDOWN_SECONDS;
+let paused=false;
+let pauseAt=0;
+let raceStarted=0;
+let resultStarted=0;
+let racers=[];
+let history=[];
+let lastResults=null;
+let raceElapsed=0;
+
+/* ---------------- THREE JS ---------------- */
+
+const canvas=document.getElementById("raceCanvas");
 const renderer=new THREE.WebGLRenderer({
- canvas,antialias:true,alpha:false
+ canvas,antialias:true
 });
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(canvas.clientWidth,canvas.clientHeight);
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x91b4c3);
-scene.fog=new THREE.Fog(0x91b4c3,75,145);
+scene.background=new THREE.Color(0x9ab9c2);
+scene.fog=new THREE.Fog(0x9ab9c2,90,170);
 
-const camera=new THREE.PerspectiveCamera(
- 48,canvas.clientWidth/canvas.clientHeight,0.1,300
-);
-camera.position.set(0,43,57);
+const camera=new THREE.PerspectiveCamera(43,1,.1,300);
+camera.position.set(0,34,79);
 camera.lookAt(0,0,0);
 
-scene.add(new THREE.HemisphereLight(0xffffff,0x40502b,2));
+scene.add(new THREE.HemisphereLight(0xffffff,0x45552c,2));
 
-const sun=new THREE.DirectionalLight(0xffffff,2.5);
-sun.position.set(-25,45,20);
-sun.castShadow=true;
-scene.add(sun);
+const sunlight=new THREE.DirectionalLight(0xffffff,2.5);
+sunlight.position.set(-20,45,30);
+sunlight.castShadow=true;
+scene.add(sunlight);
 
-// Ground
-const ground=new THREE.Mesh(
- new THREE.PlaneGeometry(180,140),
- new THREE.MeshStandardMaterial({color:0x34733d})
-);
-ground.rotation.x=-Math.PI/2;
-ground.position.y=-0.15;
-ground.receiveShadow=true;
-scene.add(ground);
-
-// Track ring
-function makeTrack(){
- const verts=[],indices=[];
- const N=240;
- for(let i=0;i<=N;i++){
-  const a=i/N*Math.PI*2;
-  for(const r of [1,0]){
-   const rx=r?21:34;
-   const rz=r?9:16;
-   verts.push(Math.cos(a)*rx,0.02,Math.sin(a)*rz);
-  }
- }
- for(let i=0;i<N;i++){
-  let p=i*2;
-  indices.push(p,p+1,p+2,p+1,p+3,p+2);
- }
- const geo=new THREE.BufferGeometry();
- geo.setAttribute("position",new THREE.Float32BufferAttribute(verts,3));
- geo.setIndex(indices);
- geo.computeVertexNormals();
- const mesh=new THREE.Mesh(geo,
-  new THREE.MeshStandardMaterial({color:0x8b7655,side:THREE.DoubleSide})
- );
- scene.add(mesh);
-}
-makeTrack();
-
-// Lane lines
-for(let i=1;i<=7;i++){
- const pts=[];
- const rx=21+i*1.62;
- const rz=9+i*1.0;
- for(let j=0;j<=240;j++){
-  const a=j/240*Math.PI*2;
-  pts.push(new THREE.Vector3(rx*Math.cos(a),0.08,rz*Math.sin(a)));
- }
- const line=new THREE.Line(
-  new THREE.BufferGeometry().setFromPoints(pts),
-  new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.5})
- );
- scene.add(line);
+function material(color,roughness=.8){
+ return new THREE.MeshStandardMaterial({color,roughness});
 }
 
-// Stands
-function box(w,h,d,x,y,z,color){
+function makeBox(w,h,d,x,y,z,color){
  const m=new THREE.Mesh(
-  new THREE.BoxGeometry(w,h,d),
-  new THREE.MeshStandardMaterial({color})
+  new THREE.BoxGeometry(w,h,d),material(color)
  );
  m.position.set(x,y,z);
  m.castShadow=true;
+ m.receiveShadow=true;
  scene.add(m);
  return m;
 }
-box(65,4,5,0,2,-23,0x37434b);
-box(65,4,5,0,2,23,0x37434b);
-box(2,8,45,-38,4,0,0xe1ba42);
-box(2,8,45,38,4,0xe1ba42);
 
-// Finish line
-const finish=box(.5,.04,13,-0.5,.12,-1,0xffffff);
-finish.position.set(0,.13,-12);
+/* ---------------- STRAIGHT TRACK ---------------- */
 
-// Racer names
-const names=[
- "THUNDER KING","GOLDEN STAR","BLACK ARROW","SILVER WIND",
- "RED ROCKET","FAST LEGEND","NIGHT RUNNER","ROYAL FLASH",
- "BLUE COMET","DARK STORM","FIRE BLAZE","WILD SPIRIT",
- "KING POWER","SPEED MASTER","LUCKY CHARM","IRON HORSE",
- "MOON LIGHT","SUPER ACE","RAPID FIRE","GOLDEN BOY",
- "DREAM RUNNER","FLASH POINT","ROYAL KING","FINAL BOSS"
-];
+const ground=new THREE.Mesh(
+ new THREE.PlaneGeometry(180,130),
+ material(0x34713c)
+);
+ground.rotation.x=-Math.PI/2;
+ground.position.y=-.15;
+ground.receiveShadow=true;
+scene.add(ground);
 
-const colors=[
- 0x8b4513,0xeeeeee,0x222222,0x9e2020,
- 0x654321,0xd4a52c,0x333366,0x9966cc
-];
+// Track
+makeBox(112,.12,24,0,.01,0,0x9a825e);
+makeBox(112,.14,1,0,.07,-12,0xe8e4d4);
+makeBox(112,.14,1,0,.07,12,0xe8e4d4);
 
-let racers=[];
-let phase="ready";
-let seconds=60;
-let raceStart=0;
-let raceDuration=26;
-let raceNumber=1;
-let countdown=null;
-let finishOrder=[];
+// Eight lane dividers
+for(let i=1;i<8;i++){
+ makeBox(108,.035,.075,0,.17,-12+i*3,0xf4e5bd);
+}
 
-function makeHorse(color){
- const g=new THREE.Group();
- const mat=new THREE.MeshStandardMaterial({color});
- const dark=new THREE.MeshStandardMaterial({color:0x24150e});
- const skin=new THREE.MeshStandardMaterial({color:0x3b251a});
+// Grass edges
+makeBox(112,.12,2,0,.02,-14,0x286333);
+makeBox(112,.12,2,0,.02,14,0x286333);
 
- function sphere(x,y,z,sx,sy,sz,material){
-  const m=new THREE.Mesh(
-   new THREE.SphereGeometry(1,12,10),material
-  );
-  m.position.set(x,y,z);
-  m.scale.set(sx,sy,sz);
-  m.castShadow=true;
-  g.add(m);
-  return m;
+// Start and finish markers
+makeBox(.45,.1,24,-49,.2,0,0xf5d24b);
+makeBox(.45,.1,24,49,.2,0,0xffffff);
+
+// Finish chequered appearance
+for(let row=0;row<8;row++){
+ for(let col=0;col<2;col++){
+  makeBox(.5,.13,1.5,49.3,.3,-10.5+row*3,
+   (row+col)%2?0x111111:0xffffff);
  }
+}
 
- // Horse body, neck and head
- sphere(0,1.05,0,.36,.38,.72,mat);
- const neck=sphere(0,1.42,.52,.22,.52,.25,mat);
- neck.rotation.x=-.45;
- sphere(0,1.88,.77,.25,.25,.28,mat);
- sphere(0,2.08,.75,.17,.13,.12,dark);
- sphere(0,1.97,.98,.09,.08,.09,dark);
+// Grandstands
+makeBox(115,5,5,0,3,-22,0x39464a);
+makeBox(115,5,5,0,3,22,0x39464a);
+makeBox(115,.3,1,0,5.7,-22,0xb58a36);
+makeBox(115,.3,1,0,5.7,22,0xb58a36);
 
- // Mane
- sphere(0,1.75,.54,.10,.30,.12,dark);
+// Track lights
+for(let x=-45;x<=45;x+=15){
+ for(const z of [-26,26]){
+  makeBox(.35,9,.35,x,4.5,z,0x444b4b);
+  makeBox(2,.2,.8,x,9,z,0xffe6a1);
+ }
+}
 
- // Legs
+/* ---------------- 3D RACER MODELS ---------------- */
+
+function sphere(parent,x,y,z,sx,sy,sz,color){
+ const m=new THREE.Mesh(
+  new THREE.SphereGeometry(1,16,12),material(color)
+ );
+ m.position.set(x,y,z);
+ m.scale.set(sx,sy,sz);
+ m.castShadow=true;
+ parent.add(m);
+ return m;
+}
+
+function cylinder(parent,x,y,z,r1,r2,h,color){
+ const m=new THREE.Mesh(
+  new THREE.CylinderGeometry(r1,r2,h,10),
+  material(color)
+ );
+ m.position.set(x,y,z);
+ m.castShadow=true;
+ parent.add(m);
+ return m;
+}
+
+function makeHorse(isHarness=false){
+ const g=new THREE.Group();
+ const coat=0x704020;
+ const dark=0x211710;
+
+ // Body facing +X
+ sphere(g,0,1.05,0,.95,.42,.38,coat);
+ const neck=sphere(g,.65,1.43,0,.27,.57,.27,coat);
+ neck.rotation.z=-.45;
+ sphere(g,1.02,1.84,0,.35,.25,.25,coat);
+ sphere(g,1.24,1.75,0,.2,.14,.18,dark);
+ sphere(g,.83,2.03,-.1,.09,.15,.07,dark);
+ sphere(g,.83,2.03,.1,.09,.15,.07,dark);
+ sphere(g,.65,1.76,0,.12,.38,.3,dark);
+
  const legs=[];
- for(const x of [-.22,.22]){
-  for(const z of [-.48,.48]){
+ for(const x of [-.58,.55]){
+  for(const z of [-.2,.2]){
    const pivot=new THREE.Group();
-   pivot.position.set(x,.91,z);
-   const leg=new THREE.Mesh(
-    new THREE.CylinderGeometry(.065,.045,.68,8),
-    skin
-   );
-   leg.position.y=-.34;
-   pivot.add(leg);
+   pivot.position.set(x,.83,z);
+   cylinder(pivot,0,-.34,0,.075,.045,.7,coat);
    g.add(pivot);
    legs.push(pivot);
   }
  }
+ sphere(g,-1,1.12,0,.42,.09,.09,dark);
 
- // Tail
- const tail=sphere(0,1.1,-.83,.11,.12,.42,dark);
- tail.rotation.x=-.45;
+ // Jockey
+ sphere(g,-.05,1.62,0,.24,.29,.24,0xf0bd2e);
+ sphere(g,-.04,1.94,0,.17,.17,.17,0xdca77b);
+ sphere(g,-.04,2.12,0,.2,.07,.2,0x263a50);
 
- // Simple jockey
- sphere(0,1.78,-.05,.23,.3,.24,
-  new THREE.MeshStandardMaterial({color:0xe7b52e}));
- sphere(0,2.05,-.06,.18,.18,.18,
-  new THREE.MeshStandardMaterial({color:0xffc69b}));
-
+ if(isHarness){
+  // Sulky wheels
+  for(const z of [-.65,.65]){
+   const wheel=new THREE.Mesh(
+    new THREE.TorusGeometry(.43,.07,8,20),
+    material(0x222222)
+   );
+   wheel.position.set(-1.55,.55,z);
+   wheel.rotation.y=Math.PI/2;
+   g.add(wheel);
+  }
+  makeCart(g);
+ }
  return {group:g,legs};
 }
 
-function makeRacers(){
+function makeCart(g){
+ // Sulky seat and shafts
+ const seat=makeLocalBox(.8,.15,.8,-1.55,1.0,0,0x7d2222);
+ const shaft1=makeLocalBox(1.35,.07,.07,-1.25,.85,.3,0x9e9e9e);
+ const shaft2=makeLocalBox(1.35,.07,.07,-1.25,.85,-.3,0x9e9e9e);
+ g.add(seat,shaft1,shaft2);
+ sphere(g,-1.6,1.45,0,.2,.23,.2,0xdca77b);
+}
+function makeLocalBox(w,h,d,x,y,z,c){
+ const m=new THREE.Mesh(
+  new THREE.BoxGeometry(w,h,d),material(c)
+ );
+ m.position.set(x,y,z);
+ return m;
+}
+
+function makeDog(){
+ const g=new THREE.Group();
+ const coat=0x6d4a30;
+ sphere(g,0,.78,0,.85,.32,.32,coat);
+ sphere(g,.75,.93,0,.37,.31,.28,coat);
+ sphere(g,1.03,.82,0,.28,.17,.23,coat);
+ sphere(g,.91,1.19,-.15,.12,.32,.08,coat);
+ sphere(g,.91,1.19,.15,.12,.32,.08,coat);
+ sphere(g,1.15,.98,-.12,.045,.045,.045,0x111111);
+ sphere(g,1.15,.98,.12,.045,.045,.045,0x111111);
+ const legs=[];
+ for(const x of [-.55,.52]){
+  for(const z of [-.17,.17]){
+   const p=new THREE.Group();
+   p.position.set(x,.65,z);
+   cylinder(p,0,-.25,0,.075,.045,.5,coat);
+   g.add(p);legs.push(p);
+  }
+ }
+ const tail=sphere(g,-.95,.95,0,.35,.09,.09,coat);
+ tail.rotation.z=-.3;
+ return {group:g,legs};
+}
+
+/* ---------------- RUNNER CREATION ---------------- */
+
+function currentType(){
+ return TYPES[(raceNo-1)%3];
+}
+
+function createRacers(){
  racers.forEach(r=>scene.remove(r.group));
  racers=[];
- names.forEach((name,i)=>{
-  const lane=i;
-  const color=colors[i%colors.length];
-  const horse=makeHorse(color);
-  scene.add(horse.group);
-  const odds=(2+Math.random()*12).toFixed(1);
-  const speed=0.88+Math.random()*.24;
+
+ const type=currentType();
+ const list=names[type];
+
+ for(let i=0;i<RUNNERS;i++){
+  const model=type==="DOG"?makeDog():makeHorse(type==="HARNESS");
+  const odds=(2.2+Math.random()*10).toFixed(1);
+  const stake=100;
+  const payout=Math.round(stake*Number(odds));
+  const speed=.86+Math.random()*.27;
+
+  model.group.position.set(-48,0,-10.5+i*3);
+  scene.add(model.group);
+
   racers.push({
-   ...horse,name,lane,odds,speed,progress:0,
-   payout:Math.round(100*Number(odds))
+   ...model,
+   name:list[i],
+   no:i+1,
+   odds,
+   stake,
+   payout,
+   speed,
+   finishTime:0,
+   progress:0
   });
- });
- updateEntries();
+ }
+ renderRunners();
 }
 
-function updateEntries(){
- const el=document.getElementById("entries");
- el.innerHTML="";
- racers.forEach((r,i)=>{
-  const div=document.createElement("div");
-  div.className="entry";
-  div.innerHTML=`
-   <div class="num">${i+1}</div>
-   <div><b>${r.name}</b><br>
-   <span class="odds">ODDS ${r.odds} • DEMO PAYOUT LKR ${r.payout}</span></div>
-   <div>🐎</div>`;
-  el.appendChild(div);
- });
-}
+/* ---------------- HTML RUNNER BOARD ---------------- */
 
-function updatePositions(t){
- racers.forEach((r)=>{
-  const p=Math.min(1,t/r.finishTime);
-  r.progress=p;
-  const a=-Math.PI/2+p*Math.PI*2;
-  const rx=22+r.lane*.49;
-  const rz=9.5+r.lane*.27;
-  const x=rx*Math.cos(a);
-  const z=rz*Math.sin(a);
-  r.group.position.set(x,0,z);
-  const dx=-rx*Math.sin(a);
-  const dz=rz*Math.cos(a);
-  r.group.rotation.y=Math.atan2(dx,dz);
-  r.legs.forEach((leg,i)=>{
-   leg.rotation.x=Math.sin(t*13+i*Math.PI)*.65;
-  });
- });
-}
+function renderRunners(){
+ const list=document.getElementById("runnerList");
+ list.innerHTML="";
 
-function showResults(){
- phase="finished";
- finishOrder=[...racers].sort((a,b)=>b.progress-a.progress);
- const w=finishOrder[0];
- document.getElementById("winnerName").textContent=
-  "🥇 "+w.name;
- document.getElementById("winnerOdds").textContent=
-  "Odds: "+w.odds+" | Demo payout per LKR 100: LKR "+w.payout;
- document.getElementById("secondName").textContent=
-  "🥈 2nd: "+finishOrder[1].name;
- document.getElementById("thirdName").textContent=
-  "🥉 3rd: "+finishOrder[2].name;
- document.getElementById("results").style.display="block";
- document.getElementById("status").textContent="RACE FINISHED";
- document.getElementById("timer").textContent="FINISH";
-}
-
-function startCountdown(){
- if(phase!=="ready" && phase!=="finished")return;
- clearInterval(countdown);
- document.getElementById("results").style.display="none";
- makeRacers();
- seconds=60;
- phase="countdown";
- document.getElementById("status").textContent=
-  "RACE STARTING SOON";
- document.getElementById("startBtn").disabled=true;
- document.getElementById("raceNo").textContent=
-  String(raceNumber).padStart(3,"0");
-
- countdown=setInterval(()=>{
-  seconds--;
-  document.getElementById("timer").textContent=
-   "00:"+String(seconds).padStart(2,"0");
-  if(seconds<=0){
-   clearInterval(countdown);
-   startRace();
-  }
- },1000);
-}
-
-function startRace(){
- phase="racing";
- raceStart=performance.now();
  racers.forEach(r=>{
-  r.finishTime=raceDuration/r.speed;
+  const div=document.createElement("div");
+  div.className="runner";
+  div.innerHTML=`
+   <div class="runner-no">${r.no}</div>
+   <div>
+    <div class="runner-name">${r.name}</div>
+    <div class="runner-detail">ODDS ${r.odds} • LKR ${r.stake} DEMO STAKE</div>
+   </div>
+   <div class="runner-pay">
+    LKR ${r.payout.toLocaleString("en-US")}
+    <small>DEMO PAYOUT</small>
+   </div>`;
+  list.appendChild(div);
+ });
+}
+
+/* ---------------- SCREEN UPDATE ---------------- */
+
+function updateScreen(){
+ const type=currentType();
+ const race=String(raceNo).padStart(2,"0");
+ document.getElementById("topRace").textContent=race+" / 24";
+ document.getElementById("topType").textContent=type;
+ document.getElementById("raceTitle").textContent=type+" RACING";
+ document.getElementById("roundLabel").textContent="RACE "+race;
+ document.getElementById("screenRace").textContent=race;
+ document.getElementById("screenType").textContent=type;
+ document.getElementById("resultHeading").textContent=
+  "RACE "+race+" • "+type;
+ document.getElementById("tabHorse").classList.toggle("active",type==="HORSE");
+ document.getElementById("tabDog").classList.toggle("active",type==="DOG");
+ document.getElementById("tabHarness").classList.toggle("active",type==="HARNESS");
+}
+
+/* ---------------- COUNTDOWN ---------------- */
+
+function beginCountdown(){
+ phase="countdown";
+ seconds=COUNTDOWN_SECONDS;
+ createRacers();
+ updateScreen();
+ document.getElementById("timerLabel").textContent="STARTS IN";
+ document.getElementById("clock").textContent="01:00";
+ document.getElementById("raceStatus").textContent=
+  "RACE "+String(raceNo).padStart(2,"0")+" • "+currentType()+" • GET READY";
+ document.getElementById("progressBar").style.width="0%";
+ document.getElementById("percent").textContent="0%";
+}
+
+/* ---------------- RACE START ---------------- */
+
+function startRace(now){
+ phase="racing";
+ raceStarted=now;
+ raceElapsed=0;
+
+ racers.forEach(r=>{
+  r.finishTime=RACE_SECONDS/r.speed;
   r.progress=0;
  });
- document.getElementById("status").textContent=
-  "🔴 LIVE RACE — THEY ARE RUNNING!";
+ document.getElementById("timerLabel").textContent="RACE TIME";
+ document.getElementById("raceStatus").textContent=
+  "🔴 LIVE RACE • "+currentType();
 }
 
-function resetRace(){
- clearInterval(countdown);
- phase="ready";
- raceNumber++;
- seconds=60;
- racers.forEach(r=>{r.progress=0});
- document.getElementById("timer").textContent="01:00";
- document.getElementById("status").textContent="READY FOR NEXT RACE";
- document.getElementById("startBtn").disabled=false;
- document.getElementById("results").style.display="none";
- makeRacers();
- racers.forEach(r=>r.group.position.set(0,0,0));
+/* ---------------- ANIMATION ---------------- */
+
+function moveRacers(t){
+ const progress=Math.min(t/RACE_SECONDS,1);
+
+ racers.forEach(r=>{
+  const p=Math.min(t/r.finishTime,1);
+  r.progress=p;
+  r.group.position.x=-48+p*96;
+  r.legs.forEach((leg,i)=>{
+   leg.rotation.z=Math.sin(t*13+i*Math.PI)*.48;
+  });
+ });
+ document.getElementById("progressBar").style.width=
+  (progress*100)+"%";
+ document.getElementById("percent").textContent=
+  Math.round(progress*100)+"%";
+
+ // Camera follows the leading group slightly
+ const leader=Math.max(...racers.map(r=>r.progress));
+ camera.position.x=Math.max(-5,Math.min(5,(leader-.5)*9));
+ camera.lookAt(camera.position.x,0,0);
 }
 
-document.getElementById("startBtn").onclick=startCountdown;
-document.getElementById("resetBtn").onclick=resetRace;
-document.getElementById("againBtn").onclick=resetRace;
+/* ---------------- RESULTS ---------------- */
 
-// Resize
+function showResults(){
+ phase="result";
+ resultStarted=performance.now();
+
+ const sorted=[...racers].sort((a,b)=>a.finishTime-b.finishTime);
+ const data={
+  no:raceNo,
+  type:currentType(),
+  date:new Date().toLocaleString(),
+  runners:sorted.map((r,i)=>({
+   position:i+1,
+   name:r.name,
+   odds:r.odds,
+   payout:r.payout
+  }))
+ };
+
+ lastResults=data;
+ history.unshift(data);
+ history=history.slice(0,24);
+
+ saveHistory();
+ renderResult(data);
+ renderHistory();
+
+ document.getElementById("raceStatus").textContent=
+  "🏆 RACE FINISHED • "+sorted[0].name+" WINS!";
+ document.getElementById("timerLabel").textContent="WINNER";
+ document.getElementById("clock").textContent="FINISH";
+ document.getElementById("latestResult").innerHTML=
+  `<div style="padding:17px;text-align:center">
+   <div style="font-size:32px">🏆</div>
+   <b style="color:#f6d36b">${sorted[0].name}</b>
+   <p style="font-size:12px">1ST PLACE • LKR ${sorted[0].payout.toLocaleString("en-US")} DEMO PAYOUT</p>
+   <span style="color:#a9c9ae;font-size:11px">Race ${String(raceNo).padStart(2,"0")} • ${currentType()}</span>
+  </div>`;
+}
+
+function renderResult(data){
+ document.getElementById("resultHeading").textContent=
+  "RACE "+String(data.no).padStart(2,"0")+" • "+data.type+" RESULT";
+ document.getElementById("resultDate").textContent=data.date;
+
+ let html=`<table class="result-table">
+ <thead><tr><th>POS</th><th>RUNNER</th><th>ODDS</th><th>DEMO PAYOUT</th></tr></thead><tbody>`;
+
+ data.runners.forEach(r=>{
+  html+=`<tr>
+   <td>${r.position===1?"🥇":r.position===2?"🥈":r.position===3?"🥉":r.position}</td>
+   <td>${r.name}</td>
+   <td>${r.odds}</td>
+   <td>LKR ${r.payout.toLocaleString("en-US")}</td>
+  </tr>`;
+ });
+ html+="</tbody></table>";
+ document.getElementById("resultContent").innerHTML=html;
+}
+
+function renderHistory(){
+ const el=document.getElementById("history");
+ if(!history.length){
+  el.innerHTML='<div class="empty">No completed races yet.</div>';
+  return;
+ }
+ el.innerHTML=history.map(h=>{
+  const winner=h.runners[0];
+  return `<div class="history-item">
+   <span><b>RACE ${String(h.no).padStart(2,"0")}</b> • ${h.type}<br>
+   <small style="color:#8fa59a">${h.date}</small></span>
+   <span style="text-align:right">🏆 ${winner.name}<br>
+   <small style="color:#d6bd6b">LKR ${winner.payout.toLocaleString("en-US")}</small></span>
+  </div>`;
+ }).join("");
+}
+
+/* ---------------- SAVE LOCAL HISTORY ---------------- */
+
+function saveHistory(){
+ try{
+  localStorage.setItem("pasinduVRHistory",JSON.stringify(history));
+ }catch(e){}
+}
+function loadHistory(){
+ try{
+  history=JSON.parse(localStorage.getItem("pasinduVRHistory")||"[]");
+  if(!Array.isArray(history))history=[];
+ }catch(e){history=[]}
+ renderHistory();
+ if(history.length){
+  renderResult(history[0]);
+  document.getElementById("latestResult").innerHTML=
+   `<div style="padding:15px;text-align:center">
+   <b style="color:#f6d36b">${history[0].runners[0].name}</b>
+   <p style="font-size:12px">Last saved winner</p></div>`;
+ }
+}
+
+/* ---------------- AUTOMATIC RACE LOOP ---------------- */
+
+function nextRace(){
+ raceNo++;
+ if(raceNo>TOTAL_RACES)raceNo=1;
+ beginCountdown();
+}
+
+function skipRace(){
+ if(paused)return;
+ if(phase==="racing"){
+  racers.forEach(r=>r.finishTime=0);
+  showResults();
+ }else if(phase==="result"){
+  nextRace();
+ }else{
+  seconds=0;
+  startRace(performance.now());
+ }
+}
+
+function tick(now){
+ requestAnimationFrame(tick);
+ if(paused)return;
+
+ if(phase==="countdown"){
+  if(!tick.lastSecond || now-tick.lastSecond>=1000){
+   tick.lastSecond=now;
+   seconds=Math.max(0,seconds-1);
+   document.getElementById("clock").textContent=
+    "00:"+String(seconds).padStart(2,"0");
+   if(seconds===0)startRace(now);
+  }
+ }
+ else if(phase==="racing"){
+  const elapsed=(now-raceStarted)/1000;
+  moveRacers(elapsed);
+  document.getElementById("clock").textContent=
+   "00:"+String(Math.max(0,Math.ceil(RACE_SECONDS-elapsed))).padStart(2,"0");
+  if(elapsed>=RACE_SECONDS)showResults();
+ }
+ else if(phase==="result"){
+  const remaining=RESULT_SECONDS-(now-resultStarted)/1000;
+  document.getElementById("clock").textContent=
+   "NEXT "+Math.max(0,Math.ceil(remaining));
+  if(remaining<=0)nextRace();
+ }
+}
+
+/* ---------------- PAUSE ---------------- */
+
+document.getElementById("pauseBtn").onclick=()=>{
+ paused=!paused;
+ const btn=document.getElementById("pauseBtn");
+ if(paused){
+  pauseAt=performance.now();
+  btn.textContent="▶ RESUME";
+  document.getElementById("raceStatus").textContent="⏸ RACING PAUSED";
+ }else{
+  const diff=performance.now()-pauseAt;
+  if(phase==="racing")raceStarted+=diff;
+  if(phase==="result")resultStarted+=diff;
+  btn.textContent="⏸ PAUSE";
+  document.getElementById("raceStatus").textContent=
+   phase==="racing"?"🔴 LIVE RACE":phase==="countdown"?"RACE COUNTDOWN":"RACE FINISHED";
+ }
+};
+
+document.getElementById("skipBtn").onclick=skipRace;
+
+/* ---------------- CATEGORY FILTER BUTTONS ---------------- */
+
+function showCategory(type){
+ const next=TYPES.indexOf(type)+1;
+ // Viewing another category never changes the automatic race sequence.
+ document.getElementById("raceStatus").textContent=
+  "AUTO SEQUENCE ACTIVE • NEXT RACE: "+currentType();
+}
+document.getElementById("tabHorse").onclick=()=>showCategory("HORSE");
+document.getElementById("tabDog").onclick=()=>showCategory("DOG");
+document.getElementById("tabHarness").onclick=()=>showCategory("HARNESS");
+
+/* ---------------- RESIZE + START ---------------- */
+
 function resize(){
  const w=canvas.clientWidth;
  const h=canvas.clientHeight;
@@ -455,35 +852,16 @@ function resize(){
 }
 window.addEventListener("resize",resize);
 
-// Render loop
-function animate(now){
- requestAnimationFrame(animate);
- if(phase==="racing"){
-  const t=(now-raceStart)/1000;
-  updatePositions(t);
-  if(t>=raceDuration){
-   racers.forEach(r=>r.progress=1);
-   // Determine final positions from their finish times
-   racers.forEach(r=>r.progress=1/r.finishTime);
-   racers.sort((a,b)=>a.finishTime-b.finishTime);
-   racers.forEach((r,i)=>r.progress=1-i*.0001);
-   showResults();
-  }
- }
- if(phase==="countdown"){
-  racers.forEach((r,i)=>{
-   const a=-Math.PI/2;
-   const rx=22+r.lane*.49;
-   const rz=9.5+r.lane*.27;
-   r.group.position.set(rx*Math.cos(a),0,rz*Math.sin(a));
-   r.group.rotation.y=0;
-  });
- }
+function animateScene(){
+ requestAnimationFrame(animateScene);
  renderer.render(scene,camera);
 }
-makeRacers();
 resize();
-requestAnimationFrame(animate);
+loadHistory();
+beginCountdown();
+requestAnimationFrame(tick);
+animateScene();
+
 </script>
 </body>
 </html>
